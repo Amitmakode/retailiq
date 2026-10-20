@@ -23,6 +23,7 @@ Run all commands from the project root.
 python -m src.main rate --base BRL --target USD
 python -m src.main price --limit 5 --target USD
 python -m src.main top --limit 5 --target USD
+python -m src.main export --limit 10 --file top10.json
 ```
 
 | Command | What it does |
@@ -30,6 +31,7 @@ python -m src.main top --limit 5 --target USD
 | `rate` | Shows the latest exchange rate from the Frankfurter API |
 | `price` | Shows order item prices converted from BRL to another currency |
 | `top` | Shows top products by revenue, converted to another currency |
+| `export` | Saves top products by revenue to a JSON file in `data\output` |
 
 ## Data
 
