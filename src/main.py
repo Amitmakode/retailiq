@@ -3,6 +3,7 @@ import argparse
 from src.data_loader import read_csv
 from src.fx_rate import get_rate
 from src.analytics import top_products
+from src.storage import save_json
 
 
 def show_prices(limit: int, target: str) -> None:
@@ -23,6 +24,15 @@ def show_top(limit: int, target: str) -> None:
     print(f"Rate: 1 BRL = {rate} {target}")
     for position, (product_id, total) in enumerate(top_products(limit), start=1):
         print(f"{position}. {product_id[:8]} | {total:.2f} BRL = {total * rate:.2f} {target}")
+
+def export_top(limit: int, filename: str) -> None:
+    """Save top products by revenue to a JSON file in data/output."""
+    data = [
+        {"product_id": product_id, "revenue_brl": round(total, 2)}
+        for product_id, total in top_products(limit)
+    ]
+    path = save_json(data, filename)
+    print(f"Saved {len(data)} products to {path}")
 
 
 def main():
@@ -45,6 +55,12 @@ def main():
     top_parser.add_argument("--limit", type=int, default=5, help="Number of products (default: 5)")
     top_parser.add_argument("--target", default="USD", help="Target currency (default: USD)")
 
+
+    # "export" command: save top products to a JSON file
+    export_parser = subparsers.add_parser("export", help="Save top products to a JSON file")
+    export_parser.add_argument("--limit", type=int, default=5, help="Number of products (default: 5)")
+    export_parser.add_argument("--file", default="top_products.json", help="Output file name")
+
     args = parser.parse_args()
 
     if args.command == "rate":
@@ -54,6 +70,8 @@ def main():
         show_prices(args.limit, args.target)
     elif args.command == "top":
         show_top(args.limit, args.target)
+    elif args.command == "export":
+        export_top(args.limit, args.file)
 
 
 if __name__ == "__main__":

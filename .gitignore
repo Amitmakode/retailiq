@@ -221,3 +221,4 @@ __marimo__/
 
 # Raw dataset (large, download with src/download_data.py)
 data/raw/
+data/output/
